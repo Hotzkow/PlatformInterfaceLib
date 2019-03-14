@@ -22,6 +22,16 @@ data class Click(val x: Int, val y: Int, override val hasWidgetTarget: Boolean =
 		val name: String = this::class.java.declaringClass.simpleName
 	}
 }
+
+/** in contrast to [Click] this function actually tries to 'tick' the checkable element with [hashId] in the current state
+ * and only uses [x] and [y] as 'click' candidates as fallback when the element cannot be found in the last state on device
+ */
+data class Tick(val idHash: Int, val x: Int, val y: Int, override val hasWidgetTarget: Boolean = false, val delay: Long=0): ExplorationAction(){
+	companion object {
+		val name: String = this::class.java.declaringClass.simpleName
+	}
+}
+
 fun String.isClick():Boolean = this == Click.name
 data class LongClick(val x: Int, val y: Int, override val hasWidgetTarget: Boolean = false, val delay: Long=0): ExplorationAction(){
 	companion object {
