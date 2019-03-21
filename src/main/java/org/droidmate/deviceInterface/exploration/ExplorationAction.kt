@@ -9,6 +9,10 @@ private var counter = 0
  * the device control driver is then deciding how to execute them based on their type and parameters */
 sealed class ExplorationAction : Serializable {
 	open val name: String get() = this::class.java.simpleName
+	/**
+	 * This property is used within the model to determine which action(s) should be mapped to a target widget.
+	 * It is the callers responsibility to keep track of the target widgets.
+	 */
 	open val hasWidgetTarget = false
 	val id: Int = counter++
 
@@ -17,34 +21,64 @@ sealed class ExplorationAction : Serializable {
 }
 object EmptyAction: ExplorationAction()
 
+/**
+ * Instead of clicking a coordinate in the currently visible screen, this action will be directly performed on the
+ * UI node, no matter if it is visible right now or not.
+ * It depends on the target app what happens if the element is currently not visible:
+ *  - it may still be triggered, just as if it would have been clicked normally
+ *  - nothing may happen
+ *  - the app may have a custom handling for this case
+ *
+ *  @since API Level 19
+ */
+abstract class NodeAction: ExplorationAction(){
+	abstract val idHash: Int
+}
+
+/** Click on the given coordinate (x,y) no matter what element is at this position
+ * @delay a fixed delay to wait after the click action before the new state is fetched
+ */
 data class Click(val x: Int, val y: Int, override val hasWidgetTarget: Boolean = false, val delay: Long=0): ExplorationAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
 }
 
-/** in contrast to [Click] this function actually tries to 'tick' the checkable element with [hashId] in the current state
- * and only uses [x] and [y] as 'click' candidates as fallback when the element cannot be found in the last state on device
- */
-data class Tick(val idHash: Int, val x: Int, val y: Int, override val hasWidgetTarget: Boolean = false, val delay: Long=0): ExplorationAction(){
+data class ClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
 }
+fun String.isClick():Boolean = this == Click.name || this == ClickEvent.name
 
-fun String.isClick():Boolean = this == Click.name
+/** in contrast to [Click] this function actually tries to 'tick' the checkable element with [idHash] in the current state
+ * and only uses [x] and [y] as 'click' candidates as fallback when the element cannot be found in the last state on device
+ */
+data class Tick(override val idHash: Int, val x: Int, val y: Int, override val hasWidgetTarget: Boolean = false, val delay: Long=0): NodeAction(){
+	companion object {
+		val name: String = this::class.java.declaringClass.simpleName
+	}
+}
+fun String.isTick():Boolean = this == Tick.name
+
+data class LongClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false): NodeAction(){
+	companion object {
+		val name: String = this::class.java.declaringClass.simpleName
+	}
+}
 data class LongClick(val x: Int, val y: Int, override val hasWidgetTarget: Boolean = false, val delay: Long=0): ExplorationAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
 }
-fun String.isLongClick():Boolean = this == LongClick.name
-data class TextInsert(val idHash: Int, val text:String, override val hasWidgetTarget: Boolean = false): ExplorationAction(){
+fun String.isLongClick():Boolean = this == LongClick.name || this == LongClickEvent.name
+
+data class TextInsert(override val idHash: Int, val text:String, override val hasWidgetTarget: Boolean = false): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
 }
-fun String.isTextInsert(): Boolean = this == TextInsert.name
+fun String.isTextInsert():Boolean = this == TextInsert.name
 
 enum class ActionType{
 	PressBack, PressHome, PressEnter, CloseKeyboard, EnableWifi, MinimizeMaximize, FetchGUI, Terminate;
@@ -76,9 +110,6 @@ data class ActionQueue(val actions: List<ExplorationAction>, val delay: Long): E
 	}
 }
 
-//TODO check if this is still necessary for our tests
-data class SimulationAdbClearPackage(val packageName: String) : ExplorationAction()
-
 /**
  * Performs a swipe from one coordinate to another coordinate. You can control
  * the smoothness and speed of the swipe by specifying the number of steps.
@@ -87,7 +118,7 @@ data class SimulationAdbClearPackage(val packageName: String) : ExplorationActio
  *
  * @param start  the starting coordinate
  * @param end the ending coordinate
- * @param steps is the number of steps for the swipe action
+ * @param stepSize is the number of steps for the swipe action
  * @since API Level 18
  */
 data class Swipe(val start:Pair<Int,Int>,val end:Pair<Int,Int>,val stepSize:Int = 35, override val hasWidgetTarget: Boolean = false): ExplorationAction() {
