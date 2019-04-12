@@ -34,6 +34,7 @@ open class DeviceResponse private constructor(
 		val widgets: List<UiElementPropertiesI>,
 		val launchedMainActivityName: String,
 		val isHomeScreen: Boolean,
+		val capturedScreen: Boolean,
 		val screenshot: ByteArray,
 		val appWindows: List<AppWindow>	//  to know the scrollable area dimensions
 ) : Serializable {
@@ -45,6 +46,7 @@ open class DeviceResponse private constructor(
 
 		fun create(isSuccessful: Boolean,
 		           uiHierarchy: List<UiElementPropertiesI>, uiDump: String, launchedActivity: String,
+		           capturedScreen: Boolean,
 		           screenshot: ByteArray,
 		           appWindows: List<AppWindow>, isHomeScreen: Boolean
 		): DeviceResponse = DeviceResponse( isSuccessful = isSuccessful&&appWindows.isNotEmpty(),
@@ -52,6 +54,7 @@ open class DeviceResponse private constructor(
 				widgets = uiHierarchy,
 				launchedMainActivityName = launchedActivity,
 				isHomeScreen = isHomeScreen,
+				capturedScreen = capturedScreen,
 				screenshot = screenshot,
 				appWindows = appWindows)
 
@@ -62,6 +65,7 @@ open class DeviceResponse private constructor(
 					"empty",
 					emptyList(),
 					"",
+					false,
 					false,
 					ByteArray(0),
 					emptyList())
