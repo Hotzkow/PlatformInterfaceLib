@@ -44,6 +44,8 @@ open class DeviceResponse private constructor(
 
 	companion object {
 
+		const val serialVersionUID: Long = -1656574761L   // "DeviceResponse".hashCode
+
 		fun create(isSuccessful: Boolean,
 		           uiHierarchy: List<UiElementPropertiesI>, uiDump: String, launchedActivity: String,
 		           capturedScreen: Boolean,
