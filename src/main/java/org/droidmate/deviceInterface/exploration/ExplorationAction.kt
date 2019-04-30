@@ -44,7 +44,7 @@ data class Click(val x: Int, val y: Int, override val hasWidgetTarget: Boolean =
 	}
 }
 
-data class ClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false): NodeAction(){
+data class ClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false, val delay: Long=0): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
@@ -61,7 +61,7 @@ data class Tick(override val idHash: Int, val x: Int, val y: Int, override val h
 }
 fun String.isTick():Boolean = this == Tick.name
 
-data class LongClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false): NodeAction(){
+data class LongClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false, val delay: Long=0): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
