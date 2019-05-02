@@ -73,7 +73,14 @@ data class LongClick(val x: Int, val y: Int, override val hasWidgetTarget: Boole
 }
 fun String.isLongClick():Boolean = this == LongClick.name || this == LongClickEvent.name
 
-data class TextInsert(override val idHash: Int, val text:String, override val hasWidgetTarget: Boolean = false): NodeAction(){
+/**
+ * This action will set the focus to /click the target UI-element, set the text content,
+ * send the enter key if [sendEnter] is true and the action is not part of an ActionQueue
+ * (for these only the very last action in the queue may send enter),
+ * clear the focus again and wait for [delay] millis before continuing (fetching the new state).
+ */
+data class TextInsert(override val idHash: Int, val text:String, override val hasWidgetTarget: Boolean = false,
+                      val delay: Long=0, val sendEnter: Boolean = true): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
@@ -100,6 +107,11 @@ fun String.isLaunchApp():Boolean = this == LaunchApp.name
 
 fun String.isQueueStart() = this == ActionQueue.startName
 fun String.isQueueEnd() = this == ActionQueue.endName
+/**
+ * The list of [actions] is executed in order and after that the device waits for [delay] millis until a state is fetched.
+ * If a delay within the single actions should be applied you should specify the delay within the respective click/text action.
+ * The device response will be reported as successfull, if all action executions returned successfull as true.
+ */
 data class ActionQueue(val actions: List<ExplorationAction>, val delay: Long): ExplorationAction(){
 	override fun toString(): String = "ActionQueue[ ${actions.map { it.toString()+"(${it.id})" }} ](delay=$delay)"
 
