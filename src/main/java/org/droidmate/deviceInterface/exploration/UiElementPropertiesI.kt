@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package org.droidmate.deviceInterface.exploration
 
 import java.io.Serializable
@@ -8,6 +10,10 @@ import java.io.Serializable
 enum class PType{
 	DeactivatableFlag, Boolean, Rectangle, Int, RectangleList, String, IntList, ConcreteId, DateTime
 }
+
+/** custom type aliases and extension functions */
+typealias DeactivatableFlag = Boolean?
+fun DeactivatableFlag.isActivated() = this != null
 
 interface UiElementPropertiesI : Serializable {
 
@@ -74,7 +80,7 @@ interface UiElementPropertiesI : Serializable {
 	val clickable: Boolean
 
 	@property:Persistent("Checkable", 10, PType.DeactivatableFlag)
-	val checked: Boolean?
+	val checked: DeactivatableFlag
 
 	@property:Persistent("Is Long-Clickable", 42, PType.Boolean)
 	val longClickable: Boolean
@@ -83,8 +89,9 @@ interface UiElementPropertiesI : Serializable {
 	@property:Persistent("Focus", 42, PType.DeactivatableFlag)
 	val focused: Boolean?
 
-	@property:Persistent("Selected", 42, PType.Boolean)
-	val selected: Boolean
+	/** True if this element is selected, false if not and null if it does not support action 'select' */
+	@property:Persistent("Selected", 42, PType.DeactivatableFlag)
+	val selected: DeactivatableFlag
 
 	@property:Persistent("Is Scrollable", 42, PType.Boolean)
 	val scrollable: Boolean
@@ -134,6 +141,12 @@ interface UiElementPropertiesI : Serializable {
 	@property:Persistent("Covers Unique Area", 19, PType.Boolean)
 	val hasUncoveredArea: Boolean
 
+	/**
+	 * True if this node has an clickable or selectable descendant, required since many nodes are reported as selectable but we do not want to click all of them.
+	 */
+	@property:Persistent("Has Clickable Descendant", 43, PType.Boolean)
+	val hasClickableDescendant: Boolean
+
 	/** -----------------------------------------------------------
 	 * !!! These properties are not persisted and should NOT be actively used for anything but debugging information !!!
 	 * ------------------------------------------------------------ */
@@ -142,7 +155,7 @@ interface UiElementPropertiesI : Serializable {
 
 	companion object {
 		// necessary for TCP communication, otherwise it would be computed by the class hash which may cause de-/serialization errors
-		const val serialVersionUID: Long = 5205083142890068067//		@JvmStatic
+		const val serialVersionUID: Long = 5205083142890068068//		@JvmStatic
 	}
 
 }
