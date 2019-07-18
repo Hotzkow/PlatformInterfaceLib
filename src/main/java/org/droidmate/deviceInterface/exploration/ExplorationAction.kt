@@ -18,6 +18,8 @@ sealed class ExplorationAction : Serializable {
 
 	fun isTerminate() = name == ActionType.Terminate.name
 	fun isFetch() = name == ActionType.FetchGUI.name
+
+	companion object
 }
 object EmptyAction: ExplorationAction()
 
