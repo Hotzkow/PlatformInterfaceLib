@@ -31,7 +31,7 @@
   Because some of the classes are deployed on an Android Device, the classes in this project are compiled with Java 7.
 */
 group = "org.droidmate"
-version = '2.4.1'
+version = '2.4.2-eap'
 
 apply plugin: 'idea'
 

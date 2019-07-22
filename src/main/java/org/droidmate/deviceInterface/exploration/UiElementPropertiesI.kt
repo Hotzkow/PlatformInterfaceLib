@@ -13,7 +13,9 @@ enum class PType{
 
 /** custom type aliases and extension functions */
 typealias DeactivatableFlag = Boolean?
-fun DeactivatableFlag.isActivated() = this != null
+@Deprecated("renamed", replaceWith = ReplaceWith("isEnabled()"))
+fun DeactivatableFlag.isActivated() = isEnabled()
+fun DeactivatableFlag.isEnabled() = this != null
 
 interface UiElementPropertiesI : Serializable {
 
