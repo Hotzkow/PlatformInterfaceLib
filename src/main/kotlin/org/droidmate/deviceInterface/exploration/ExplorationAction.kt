@@ -114,7 +114,8 @@ fun String.isQueueEnd() = this == ActionQueue.endName
  * If a delay within the single actions should be applied you should specify the delay within the respective click/text action.
  * The device response will be reported as successfull, if all action executions returned successfull as true.
  */
-data class ActionQueue(val actions: List<ExplorationAction>, val delay: Long): ExplorationAction(){
+data class ActionQueue(val actions: List<ExplorationAction>, val delay: Long,
+                       val screenshotForEach: Boolean =false): ExplorationAction(){
 	override fun toString(): String = "ActionQueue[ ${actions.map { it.toString()+"(${it.id})" }} ](delay=$delay)"
 
 	companion object {
