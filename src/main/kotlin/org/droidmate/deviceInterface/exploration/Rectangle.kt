@@ -42,6 +42,9 @@ data class Rectangle(val leftX:Int, val topY:Int, val width: Int, val height: In
 			( r.topY in topY..bottomY  // top or bottom y is contained in this
 					|| r.bottomY in topY..bottomY)
 
+	fun containsX(x: Int): Boolean = (x in leftX..rightX)
+	fun containsY(y: Int): Boolean = (y in topY..bottomY)
+
 	override fun toString(): String = "$leftX$toStringSeparator$topY$toStringSeparator$width$toStringSeparator$height"
 
 	companion object {
