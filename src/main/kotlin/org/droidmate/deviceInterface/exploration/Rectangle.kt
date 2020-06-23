@@ -44,6 +44,13 @@ data class Rectangle(val leftX:Int, val topY:Int, val width: Int, val height: In
 
 	fun containsX(x: Int): Boolean = (x in leftX..rightX)
 	fun containsY(y: Int): Boolean = (y in topY..bottomY)
+	/**
+	 * Check if this completely surrounds the given rectangle [r].
+	 * [r] has to be within screen range (visible bounds) to avoid wrong results due to partially rendered contained elements
+	 * (if they have the same boundaries this is true as well)
+	 */
+	fun surrounds(r: Rectangle): Boolean = containsX(r.leftX) && containsX(r.rightX)
+			&& containsY(r.topY) && containsY(r.bottomY)
 
 	override fun toString(): String = "$leftX$toStringSeparator$topY$toStringSeparator$width$toStringSeparator$height"
 
