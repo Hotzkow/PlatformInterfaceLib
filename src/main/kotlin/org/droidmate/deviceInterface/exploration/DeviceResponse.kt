@@ -44,7 +44,7 @@ open class DeviceResponse private constructor(
 
 	companion object {
 
-		const val serialVersionUID: Long = -1656574761L   // "DeviceResponse".hashCode
+		const val serialVersionUID: Long = -1656574762L   // "DeviceResponse".hashCode has to be unique, i.e. modify it when this class is modified
 
 		fun create(isSuccessful: Boolean,
 		           uiHierarchy: List<UiElementPropertiesI>, uiDump: String, launchedActivity: String,

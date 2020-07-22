@@ -35,7 +35,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.droidmate"
-version = "2.5.0"
+version = "2.5.1"
 
 plugins {
 	id("org.jetbrains.kotlin.jvm") apply true

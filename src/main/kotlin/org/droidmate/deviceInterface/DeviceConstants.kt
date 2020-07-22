@@ -32,7 +32,7 @@ object DeviceConstants {
 
 	// To understand why this is constant and not a cmd line parameter, see comment in
 	// org.droidmate.configuration.ConfigurationBuilder.bindAndValidate()
-	const val UIADAEMON_SERVER_PORT = 59800
+//	const val UIADAEMON_SERVER_PORT = 59800
 
 	const val logcatLogFileName = "droidmate_logcat.txt"
 

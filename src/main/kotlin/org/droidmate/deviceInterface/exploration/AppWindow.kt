@@ -26,6 +26,6 @@ data class AppWindow(
         val screenSize: Pair<Int, Int>
 ) : Serializable {
     companion object {
-        private const val serialVersionUID: Long = -686914223 // this is "AppWindow".hashCode but it only has to be unique
+        private const val serialVersionUID: Long = -686914224 // this is "AppWindow".hashCode but it only has to be unique
     }
 }
