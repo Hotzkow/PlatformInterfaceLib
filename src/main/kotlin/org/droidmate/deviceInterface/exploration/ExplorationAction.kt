@@ -80,9 +80,11 @@ fun String.isLongClick():Boolean = this == LongClick.name || this == LongClickEv
  * send the enter key if [sendEnter] is true and the action is not part of an ActionQueue
  * (for these only the very last action in the queue may send enter),
  * clear the focus again and wait for [delay] millis before continuing (fetching the new state).
+ *
+ * @param closeKeyboard close the keyboard (if any) after inserting the text
  */
 data class TextInsert(override val idHash: Int, val text:String, override val hasWidgetTarget: Boolean = false,
-                      val delay: Long=0, val sendEnter: Boolean = true): NodeAction(){
+                      val delay: Long=0, val sendEnter: Boolean = true, val closeKeyboard: Boolean = false): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
