@@ -46,7 +46,11 @@ data class Click(val x: Int, val y: Int, override val hasWidgetTarget: Boolean =
 	}
 }
 
-data class ClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false, val delay: Long=0): NodeAction(){
+/**
+ * @param x and
+ * @param y are backup coordinates to issue a coordinate click in case the event failed (i.e. the node with $idHash cannot be located)
+ */
+data class ClickEvent(override val idHash: Int, val x:Int, val y:Int, override val hasWidgetTarget: Boolean=false, val delay: Long=0): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
@@ -63,7 +67,11 @@ data class Tick(override val idHash: Int, val x: Int, val y: Int, override val h
 }
 fun String.isTick():Boolean = this == Tick.name
 
-data class LongClickEvent(override val idHash: Int, override val hasWidgetTarget: Boolean=false, val delay: Long=0): NodeAction(){
+/**
+ * @param x and
+ * @param y are backup coordinates to issue a coordinate click in case the event failed (i.e. the node with $idHash cannot be located)
+ */
+data class LongClickEvent(override val idHash: Int, val x:Int, val y:Int, override val hasWidgetTarget: Boolean=false, val delay: Long=0): NodeAction(){
 	companion object {
 		val name: String = this::class.java.declaringClass.simpleName
 	}
